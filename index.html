@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style type="text/css">
+      .form {
+        width: 400px;
+        margin: auto;
+        display: center;
+      }
+      #input {
+        color: black;
+        width: 400px;
+        height: 50px;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+<body>
+  <div class="form">
+      <p>Below is a <a href="https://en.bitcoin.it/wiki/Seed_phrase">12-word BIP39 seed phrase</a> generator. It uses the <a href="https://github.com/bitcoinjs/bip39#readme">bip39</a> module to generate 128 bit seed phrases that can be converted into private keys.
+    </p>
+    <p>
+      This page is for demonstration and testing purposes only.
+    </p>
+    <span>Hide</span>
+    <input type="checkbox" id="show" />
+    <textarea id="input" type="text"></textarea>
+    <button id="copy">Copy To Clipboard</button>
+    <button id="regen">Regenerate</button>
+  </div>  
+  <script src="bundle.js"></script>
+  <script type="text/javascript">
+    window.bip39 = require('bip39')
+    var copyText = document.querySelector("#input")
+    var btn = document.querySelector("#copy")
+    var regen = document.querySelector("#regen")
+    var checkbox = document.querySelector("#show")
+    btn.addEventListener("click", copy)
+    regen.addEventListener("click", generate)
+    checkbox.addEventListener("click", toggle)
+    
+    function toggle () {
+      if (checkbox.checked) {
+        copyText.style = "color: white"
+      } else {
+        copyText.style = ""
+      }
+    }
+    function copy () {
+      var txt = copyText.value
+      copyToClipboard(txt)
+      btn.innerText = "Copied To Clipboard!"
+      setTimeout(function () {
+        btn.innerText = "Copy To Clipboard"
+      }, 1000)
+    }
+    
+    generate()
+    
+    function generate () {
+      var mnemonic = bip39.generateMnemonic()
+      var seed = bip39.mnemonicToSeed(mnemonic)
+      copyText.value = mnemonic
+    }
+    
+    function copyToClipboard (str) {
+      const el = document.createElement('textarea')
+      el.value = str
+      el.setAttribute('readonly', '')
+      el.style.position = 'absolute'
+      el.style.left = '-9999px'
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+    }
+  </script
+</body>
+</html>
